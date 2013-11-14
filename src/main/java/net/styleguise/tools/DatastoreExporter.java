@@ -178,8 +178,9 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 
 	private void writeHeaderRow(PrintWriter writer, HashSet<String> propertyNames){
 		writer.write(Entity.KEY_RESERVED_PROPERTY);
-		writer.write(FieldSeparator);
 		Iterator<String> i = propertyNames.iterator();
+		if( i.hasNext() )
+			writer.write(FieldSeparator);
 		while( i.hasNext() ){
 			writer.write(i.next());
 			if( i.hasNext() )
@@ -190,8 +191,9 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 
 	private void writeEntity(PrintWriter writer, Entity entity, HashSet<String> propertyNames){
 		writer.write(KeyFactory.keyToString(entity.getKey()));
-		writer.write(FieldSeparator);
 		Iterator<String> i = propertyNames.iterator();
+		if( i.hasNext() )
+			writer.write(FieldSeparator);
 		while( i.hasNext() ){
 			Object value = entity.getProperty(i.next());
 			writeObject(writer, value);
