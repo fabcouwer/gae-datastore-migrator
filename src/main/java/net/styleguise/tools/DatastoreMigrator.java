@@ -2,6 +2,7 @@ package net.styleguise.tools;
 
 import java.io.Console;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class DatastoreMigrator {
@@ -20,12 +21,18 @@ public class DatastoreMigrator {
 		System.out.println("Enter host and port for the remote datastore");
 		String host = console.readLine("Host (ex. APPNAME.appspot.com): ");
 		int port = Integer.parseInt(console.readLine("Port (on GAE 443, on localhost 8888): "));
+		
+		System.out.println("Enter path to JPA persistence XML file");
+		Path persistenceXmlFile = Paths.get(console.readLine("File: "));
 
 		DatastoreExporter exporter = new DatastoreExporter(host, port, email, password);
 		List<Path> dataFiles = exporter.exportData();
 		exporter.close();
 
-		DatastoreImporter importer = new DatastoreImporter(DatastoreImporter.Localhost, DatastoreImporter.DevRemoteApiPort, email, password);
+		DatastoreImporter importer = new DatastoreImporter(
+				DatastoreImporter.Localhost,
+				DatastoreImporter.DevRemoteApiPort,
+				persistenceXmlFile);
 		importer.importData(dataFiles);
 		importer.close();
 	}

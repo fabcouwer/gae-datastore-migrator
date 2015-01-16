@@ -1,6 +1,8 @@
 package net.styleguise.tools;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,12 +24,10 @@ import org.w3c.dom.NodeList;
  */
 public class PersistenceXmlReader {
 
-	private static final String PersistenceXmlFile = "/META-INF/persistence.xml";
-
 	private PersistenceXmlReader(){}
 
-	public static List<Class<?>> readClasses(){
-		try( InputStream persistenceXmlInputStream = PersistenceXmlReader.class.getResourceAsStream(PersistenceXmlFile) ){
+	public static List<Class<?>> readClasses(Path persistenceXmlFile){
+		try( InputStream persistenceXmlInputStream = new FileInputStream(persistenceXmlFile.toFile()) ){
 
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();

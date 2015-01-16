@@ -71,26 +71,35 @@ public class DatastoreImporter extends RemoteDatastoreClient {
 	 * directory into the Dev datastore running on the localhost on port 8888.
 	 */
 	public static void main(String[] args) throws Exception {
-		//when connecting to dev datastore, the username and email may be empty strings
-		String email = EMPTY;
-		String password = EMPTY;
 		Console console = System.console();
 		Path dataDir = Paths.get(console.readLine("CSV data dir: "));
+		Path persistenceXmlFile = Paths.get(console.readLine("Path to JPA persistence XML file: "));
 		List<Path> dataFiles = new ArrayList<>();
 		try(
 			DirectoryStream<Path> ds = Files.newDirectoryStream(dataDir);
-			DatastoreImporter importer = new DatastoreImporter(Localhost, DevRemoteApiPort, email, password) ){
+			DatastoreImporter importer = new DatastoreImporter(
+					Localhost, 
+					DevRemoteApiPort, 
+					persistenceXmlFile) ){
 			addAll(dataFiles, ds.iterator());
 			importer.importData(dataFiles);
 		}
 	}
+	
+	//------------------------------------------------------------------------------------------------------
+	//Member variables
+	//------------------------------------------------------------------------------------------------------
+	
+	private Path persistenceXmlFile;
 
 	//------------------------------------------------------------------------------------------------------
 	//Constructors
 	//------------------------------------------------------------------------------------------------------
 
-	public DatastoreImporter(String host, int port, String email, String password) throws IOException {
-		super(host, port, email, password);
+	public DatastoreImporter(String host, int port, Path persistenceXmlFile) throws IOException {
+		// when connecting to dev datastore, the username and email may be empty strings
+		super(host, port, EMPTY, EMPTY);
+		this.persistenceXmlFile = persistenceXmlFile;
 	}
 
 	//------------------------------------------------------------------------------------------------------
@@ -99,7 +108,7 @@ public class DatastoreImporter extends RemoteDatastoreClient {
 
 	public void importData(List<Path> csvFiles) throws IOException {
 
-		List<Class<?>> persistentClasses = PersistenceXmlReader.readClasses();
+		List<Class<?>> persistentClasses = PersistenceXmlReader.readClasses(persistenceXmlFile);
 		HashMap<String, Class<?>> kindToClassMap = new HashMap<>(persistentClasses.size());
 		for( Class<?> clazz : persistentClasses )
 			kindToClassMap.put(clazz.getSimpleName(), clazz);

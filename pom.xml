@@ -7,7 +7,7 @@
   <description>Utility classes for exporting datastore to CSV files and for importing them using a Java Persistence API reference model.</description>
 
   	<properties>
-		<gaeVersion>1.8.7</gaeVersion>
+		<gaeVersion>1.9.17</gaeVersion>
   	</properties>
 
   	<dependencies>
@@ -28,6 +28,30 @@
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-jpa_2.0_spec</artifactId>
 			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo-api</artifactId>
+			<version>3.0.1</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.transaction</groupId>
+					<artifactId>jta</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-user</artifactId>
+			<version>2.7.0</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.validation</groupId>
+					<artifactId>validation-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
