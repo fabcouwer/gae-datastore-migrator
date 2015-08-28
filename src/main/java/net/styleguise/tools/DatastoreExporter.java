@@ -39,8 +39,7 @@ import com.google.appengine.api.datastore.Text;
  * Certain datastore kinds that represent metadata (like __Stat_Total__ and
  * _ah_SESSION) are not exported.
  *
- * @author Benjamin Possolo
- * Edited by Friso Abcouwer
+ * @author Benjamin Possolo Edited by Friso Abcouwer
  */
 public class DatastoreExporter extends RemoteDatastoreClient {
 
@@ -63,8 +62,8 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 	public static final String Dash = "-";
 	private static final String FileExtension = ".csv";
 	private static final String DataDir = "gae-data-dump";
-	private static final int PrefetchSize = 100;
-	private static final int ChunkSize = 10;
+	private static final int PrefetchSize = 10000;
+	private static final int ChunkSize = 1000;
 	private static final String HttpSessionKind = "_ah_SESSION";
 	private static final String StatKindCompositeIndex = "__Stat_Kind_CompositeIndex__";
 	private static final String StatKindIsRootEntity = "__Stat_Kind_IsRootEntity__";
@@ -90,13 +89,13 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 		System.out
 				.println("Enter your GAE credentials for administering styleguise-marketplace");
 		// String email = console.readLine("Email: ");'
-		String email = args[0];
+		String email = "email@email.com";
 		// String password = new String(console.readPassword("Password: "));
-		String password = args[1];
+		String password = "password123";
 
 		System.out.println("Enter host and port for the remote datastore");
 		// String host = console.readLine("Host (ex. APPNAME.appspot.com): ");
-		String host = args[2];
+		String host = "amttrack.appspot.com";
 		// int port =
 		// Integer.parseInt(console.readLine("Port (on GAE 443, on localhost 8888): "));
 		int port = 443;
@@ -252,7 +251,7 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 
 	private void writeEntity(PrintWriter writer, Entity entity,
 			HashSet<String> propertyNames) {
-		writer.write(KeyFactory.keyToString(entity.getKey()));
+		writer.write(entity.getKey().toString());
 		Iterator<String> i = propertyNames.iterator();
 		if (i.hasNext())
 			writer.write(FieldSeparator);
@@ -288,8 +287,10 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 			writer.write(Null);
 
 		else {
-			if (value instanceof Key)
-				writer.write(KeyFactory.keyToString((Key) value));
+			if (value instanceof Key) {
+				Key key = (Key) value;
+				writer.write(key.toString());
+			}
 
 			else if (value instanceof Date)
 				writer.write(Long.toString(((Date) value).getTime()));
