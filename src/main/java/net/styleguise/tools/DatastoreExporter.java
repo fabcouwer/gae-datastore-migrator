@@ -89,7 +89,7 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 		System.out
 				.println("Enter your GAE credentials for administering styleguise-marketplace");
 		// String email = console.readLine("Email: ");'
-		String email = "email@email.com";
+		String email = "crowdsourcinghow@gmail.com";
 		// String password = new String(console.readPassword("Password: "));
 		String password = "password123";
 
@@ -145,6 +145,7 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 		kinds.remove(BlobFileIndex);
 		kinds.remove(BlobInfo);
 		kinds.remove(StatNamespace);
+		kinds.remove("HITcontent");
 
 		ArrayList<Path> dataFiles = new ArrayList<>(kinds.size());
 		for (String kind : kinds) {
@@ -336,6 +337,9 @@ public class DatastoreExporter extends RemoteDatastoreClient {
 		}
 		if (value.contains(FieldSeparator)) {
 			value = DoubleQuote + value + DoubleQuote;
+		}
+		if (value.contains(",")) {
+			value = value.replaceAll(",", ";");
 		}
 		writer.write(value);
 	}
